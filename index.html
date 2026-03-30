@@ -788,9 +788,9 @@ body {
 <div class="lb-backdrop" id="lbBackdrop"></div>
 <div class="lb-card" id="lbCard">
   <div class="lb-video-area" id="lbVideoArea">
-    <video id="lbVideo" preload="auto" playsinline loop
-      disablePictureInPicture
-      controlslist="nofullscreen nodownload noremoteplayback"></video>
+    <video id="lbVideo" preload="auto" playsinline loop muted
+  disablePictureInPicture
+  controlslist="nofullscreen nodownload noremoteplayback"></video>
     <button class="lb-nav lb-nav-prev" id="lbPrev">&#8592;</button>
     <button class="lb-nav lb-nav-next" id="lbNext">&#8594;</button>
     <div class="lb-controls">
@@ -1031,6 +1031,9 @@ body {
   const lbCloseBtn  = document.getElementById('lbCloseBtn');
   const lbPrev      = document.getElementById('lbPrev');
   const lbNext      = document.getElementById('lbNext');
+
+  lbVideo.muted = true;
+lbVideo.volume = 0;
 
   const videoList  = [];
   let currentIndex = 0;
