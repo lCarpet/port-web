@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carpet - commissions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=VT323&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent:  #8a1c1c;
+  --accent2: #b52828;
+  --panel:   rgba(255,222,222,0.84);
+  --panel2:  rgba(252,205,205,0.78);
+  --border:  rgba(138,28,28,0.2);
+  --text:    #000000;
+  --textdim: #8a3a3a;
+  --white:   #ffffff;
+}
+
+html { scroll-behavior: smooth; }
+
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+body {
+  background: linear-gradient(160deg, #eda8a8 0%, #f7c3c3 35%, #fbd8d8 65%, #eeb5b5 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'VT323', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#particlesCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 12px 60px;
+  perspective: 1000px;
+}
+
+.top-stripe {
+  background: var(--accent);
+  color: rgba(255,210,210,0.9);
+  font-family: 'VT323', monospace;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  padding: 5px 0;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: mscroll 22s linear infinite;
+}
+
+@keyframes mscroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.outer {
+  background: rgba(252,214,214,0.5);
+  backdrop-filter: blur(3px);
+  border: 1.5px solid rgba(138,28,28,0.18);
+  border-top: 3px solid var(--accent);
+  box-shadow: 0 15px 35px rgba(138,28,28,0.2), 0 5px 15px rgba(138,28,28,0.1);
+  overflow: hidden;
+  margin-top: 26px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tab-bar {
+  display: flex;
+  background: rgba(100,20,20,0.95);
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.tab-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,210,210,0.5);
+  padding: 9px 22px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: rgba(240,248,255,0.85);
+}
+
+.tab-btn.active {
+  color: var(--white);
+  border-bottom: 3px solid var(--white);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeUp 0.35s ease;
+}
+
+.header-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid var(--accent);
+}
+
+.header-left {
+  background: var(--accent);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.site-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.3rem;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.site-sub {
+  font-size: 1.1rem;
+  color: rgba(250,185,185,0.85);
+  letter-spacing: 0.07em;
+}
+
+.header-right {
+  background: var(--panel);
+  border-left: 2px solid var(--accent);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.header-right .htitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.header-right p {
+  font-size: 1.1rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.header-right strong { color: var(--accent); }
+
+.profile-row {
+  background: var(--panel2);
+  border-bottom: 2px solid var(--border);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.pfp-wrap {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.pfp-wrap:hover {
+  transform: scale(1.05) rotate(-3deg);
+}
+
+.pfp-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pfp-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  border: 2px solid rgba(138,28,28,0.45);
+  pointer-events: none;
+}
+
+.pname {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: var(--accent);
+  line-height: 1;
+  text-shadow: 2px 2px 0 rgba(138,28,28,0.18), 3px 3px 0 rgba(138,28,28,0.1);
+}
+
+.pmeta { font-size: 1.12rem; color: var(--textdim); margin-top: 3px; line-height: 1.45; }
+.pmeta span { color: var(--accent); }
+.badge-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+
+.badge {
+  font-size: 0.95rem;
+  padding: 1px 9px;
+  border: 1.5px solid rgba(138,28,28,0.35);
+  border-radius: 3px;
+  color: var(--accent2);
+  background: rgba(181,40,40,0.07);
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+}
+
+.badge:hover {
+  background: var(--accent);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.lazy-note {
+  background: rgba(138,28,28,0.06);
+  border-top: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+  padding: 10px 18px;
+  font-size: 1.1rem;
+  color: var(--textdim);
+  font-style: italic;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.lazy-tag {
+  font-family: 'Bebas Neue', sans-serif;
+  font-style: normal;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  background: var(--accent);
+  color: var(--white);
+  padding: 1px 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.divline { height: 2px; background: linear-gradient(90deg, var(--accent), rgba(138,28,28,0.08)); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid var(--border);
+}
+
+.col-l { background: var(--panel);  padding: 18px 18px 22px; }
+.col-r { background: var(--panel2); padding: 18px 18px 22px; border-left: 2px solid var(--border); }
+
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  border-bottom: 1.5px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.rtxt { font-size: 1.14rem; color: var(--text); line-height: 1.72; }
+.rtxt p { margin-bottom: 1px; transition: transform 0.2s ease; }
+.rtxt p:hover { transform: translateX(5px); color: var(--accent); }
+.rtxt strong { color: var(--accent); }
+
+.warn-box {
+  background: rgba(138,28,28,0.07);
+  border-left: 3px solid var(--accent);
+  padding: 9px 13px;
+  font-size: 1.08rem;
+  color: var(--text);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.warn-box strong { color: var(--accent); }
+
+.robux-banner {
+  background: var(--accent);
+  color: var(--white);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  transition: letter-spacing 0.3s ease;
+}
+
+.robux-banner:hover {
+  letter-spacing: 0.18em;
+}
+
+.pay-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid var(--border);
+}
+
+.pay-l { background: var(--panel);  padding: 18px 18px 22px; }
+.pay-r { background: var(--panel2); padding: 18px 18px 22px; border-left: 2px solid var(--border); }
+
+.notice-pill {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--white);
+  font-size: 0.95rem;
+  padding: 2px 12px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  letter-spacing: 0.06em;
+}
+
+.pricelist { font-size: 1.13rem; color: var(--text); line-height: 1.7; }
+
+.pricelist .cat {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  color: var(--accent2);
+  letter-spacing: 0.07em;
+  margin-top: 7px;
+  margin-bottom: 1px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prow {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.prow:hover {
+  background: rgba(138,28,28,0.08);
+  transform: scale(1.02);
+}
+
+.prow .pn { color: var(--text); }
+.prow .pa { color: var(--accent); white-space: nowrap; font-weight: bold; }
+
+.bnote {
+  background: rgba(138,28,28,0.06);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  color: var(--textdim);
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.bnote strong { color: var(--accent); }
+
+.full-panel {
+  background: var(--panel);
+  padding: 16px 20px 18px;
+  border-bottom: 2px solid var(--border);
+}
+
+.footer-stripe {
+  background: var(--accent);
+  color: rgba(250,185,185,0.75);
+  font-size: 0.98rem;
+  letter-spacing: 0.14em;
+  text-align: center;
+  padding: 7px 0;
+}
+
+/* ── WORK GRID (thumbnail gallery) ── */
+.work-grid {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.work-grid::-webkit-scrollbar { width: 6px; }
+.work-grid::-webkit-scrollbar-track { background: rgba(138,28,28,0.05); }
+.work-grid::-webkit-scrollbar-thumb { background: rgba(138,28,28,0.28); border-radius: 3px; }
+.work-grid::-webkit-scrollbar-thumb:hover { background: rgba(138,28,28,0.5); }
+
+.work-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--textdim);
+  font-size: 1.2rem;
+  display: none;
+  grid-column: 1 / -1;
+}
+
+/* thumbnail card */
+.thumb-card {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #2e0a0a;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.thumb-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 22px rgba(138,28,28,0.35);
+  border-color: var(--accent2);
+}
+
+.thumb-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.thumb-hover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(8, 24, 50, 0.52);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.thumb-card:hover .thumb-hover { opacity: 1; }
+
+.thumb-play {
+  width: 32px;
+  height: 32px;
+  background: rgba(240,248,255,0.92);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 0.85rem;
+  padding-left: 3px;
+}
+
+.thumb-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(240,248,255,0.85);
+}
+
+/* ── LIGHTBOX ── */
+.lb-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 15, 30, 0.88);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.38s ease;
+  backdrop-filter: blur(4px);
+}
+
+.lb-backdrop.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lb-card {
+  position: fixed;
+  z-index: 1000;
+  background: #2e0a0a;
+  border: 1.5px solid rgba(138,28,28,0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, top, left, width, height;
+}
+
+.lb-card.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lb-video-area {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lb-video-area video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+/* lightbox custom controls */
+.lb-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 28px 14px 10px;
+  background: linear-gradient(transparent, rgba(30,4,4,0.8));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.lb-video-area:hover .lb-controls { opacity: 1; }
+
+.lb-play-btn {
+  background: none;
+  border: none;
+  color: rgba(240,248,255,0.9);
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-family: 'VT323', monospace;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.lb-progress {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.lb-bar {
+  height: 100%;
+  width: 0%;
+  background: rgba(240,248,255,0.9);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.lb-time {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: rgba(240,248,255,0.75);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* lightbox footer bar */
+.lb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: rgba(12,28,55,0.95);
+  border-top: 1px solid rgba(138,28,28,0.3);
+  flex-shrink: 0;
+}
+
+.lb-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--accent2);
+}
+
+.lb-close {
+  background: none;
+  border: none;
+  color: rgba(200,225,255,0.6);
+  font-size: 1.05rem;
+  font-family: 'VT323', monospace;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lb-close:hover {
+  color: rgba(240,248,255,1);
+  background: rgba(138,28,28,0.3);
+}
+
+@media (max-width: 520px) {
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade { animation: fadeUp 0.5s ease forwards; opacity: 0; }
+.d1 { animation-delay: 0.04s; }
+.d2 { animation-delay: 0.1s; }
+.d3 { animation-delay: 0.18s; }
+.d4 { animation-delay: 0.26s; }
+.d5 { animation-delay: 0.34s; }
+.d6 { animation-delay: 0.42s; }
+
+@media (max-width: 520px) {
+  .header-block, .two-col, .pay-grid { grid-template-columns: 1fr; }
+  .col-r, .pay-r { border-left: none; border-top: 2px solid var(--border); }
+  .header-right { border-left: none; border-top: 2px solid rgba(255,255,255,0.2); }
+  .outer { transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particlesCanvas"></canvas>
+
+<div class="page">
+
+  <div class="top-stripe fade d1">
+    <span class="marquee-text">
+      CARPET COMMS ✦ CRYPTO / PAYPAL / ROBUX ✦ SCRIPTING ✦ 4 YRS EXP ✦ OPEN FOR ORDERS ✦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      CARPET COMMS ✦ CRYPTO / PAYPAL / ROBUX ✦ SCRIPTING ✦ 4 YRS EXP ✦ OPEN FOR ORDERS ✦
+    </span>
+  </div>
+
+  <div class="outer" id="mainCard">
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="comms">COMMISSIONS</button>
+      <button class="tab-btn" data-tab="work">WORK</button>
+    </div>
+
+    <div class="tab-content active" id="tab-comms">
+
+      <div class="header-block fade d2">
+        <div class="header-left">
+          <div class="site-title">CARPET</div>
+          <div class="site-sub">// ROBLOX DEV COMMISSIONS</div>
+          <div class="site-sub" style="font-size:0.95rem;opacity:0.65;margin-top:3px;">COMMS OPEN · DM ON DISCORD</div>
+        </div>
+        <div class="header-right">
+          <div class="htitle">ABOUT ME</div>
+          <p>
+            hey, i'm <strong>Carpet</strong>, a <strong>scripter</strong> with
+            <strong>4 years</strong> of roblox dev experience. I'm open to work on projects and commissions.
+          </p>
+        </div>
+      </div>
+
+      <div class="profile-row fade d2">
+        <div class="pfp-wrap">
+          <div class="pfp-ring"></div>
+          <img src="pic.png" alt="Carpet">
+        </div>
+        <div>
+          <div class="pname selectable">CARPET_</div>
+          <div class="pmeta"><span>· roblox scripter · <span>4 yrs exp</span></div>
+          <div class="badge-row">
+            <span class="badge">SCRIPTING</span>
+            <span class="badge">CRYPTO</span>
+            <span class="badge">PAYPAL</span>
+            <span class="badge">ROBUX</span>
+            <span class="badge">OPEN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lazy-note fade d3">
+        <span class="lazy-tag">NOTE</span>
+        only accept serious and organised clients.
+      </div>
+
+      <div class="divline fade d3"></div>
+
+      <div class="two-col fade d3">
+        <div class="col-l">
+          <div class="sec-title">RULES &amp; Guidelines</div>
+          <div class="rtxt">
+            <p>+ Pay upfront 50% is important.</p>
+            <p>+ Be clear about your request upfront.</p>
+            <p>+ Contact me via DM on Discord, not other social applications.</p>
+            <p>+ Don't rush. Good work takes time.</p>
+            <p>+ Getting hired for a game will cost at least 1K USD + % but we can discuss this.</p>
+            <p>+ I do not have a specific scope of mechanics I focus on, I can do pretty much everything.</p>
+          </div>
+        </div>
+        <div class="col-r">
+          <div class="sec-title">DEADLINES</div>
+          <div class="rtxt">
+            <p>I'll give an honest estimate before we start.</p>
+            <br>
+            <p>If a deadline isn't met on my end, <strong>you're allowed to get your money back.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="robux-banner fade d4">
+        PAYMENTS: CRYPTO, PAYPAL, ROBUX · 50% UPFRONT
+      </div>
+
+     <div class="pay-grid fade d4">
+        <div class="pay-l">
+          <div class="sec-title">COMMISSIONS</div>
+          <div class="notice-pill">SCRIPTING</div>
+          <div class="pricelist">
+            <div class="cat">PRICING:</div>
+            <div style="font-size:1rem;color:var(--textdim);line-height:1.55;">
+              I cannot specify pricing as it depends on the scope. Contact me for a quote.
+            </div>
+          </div>
+        </div>
+
+        <div class="pay-r">
+          <div class="sec-title">PAYMENT</div>
+          <div class="pricelist">
+            <div class="cat">METHODS:</div>
+            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">Crypto, PayPal, or Robux.</p>
+            <div class="cat" style="margin-top:12px;">TERMS:</div>
+            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">50% upfront required before work begins.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="full-panel fade d5">
+        <div class="sec-title" style="font-size:1.15rem;">ADDITIONAL NOTES</div>
+        <div class="rtxt" style="font-size:1.1rem;">
+          <p>* Accepted payment methods: Crypto, PayPal, Robux.</p>
+          <p style="margin-top:5px;">* 50% payment upfront is required.</p>
+          <p style="margin-top:5px;">* DM me on Discord to start a commission.</p>
+        </div>
+      </div>
+
+      <div class="footer-stripe fade d6">
+        CARPET <span style="font-size: 1.5em;">✦</span> CRYPTO / PAYPAL / ROBUX <span style="font-size: 1.5em;">✦</span> 4 YRS EXP <span style="font-size: 1.5em;">✦</span> SCRIPTING
+      </div>
+
+    </div>
+
+    <div class="tab-content" id="tab-work">
+      <div class="work-grid" id="workGrid"></div>
+      <div class="work-empty" id="workEmpty">no videos found yet. check back later!</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb-backdrop" id="lbBackdrop"></div>
+<div class="lb-card" id="lbCard">
+  <div class="lb-video-area" id="lbVideoArea">
+    <video id="lbVideo" preload="auto" playsinline
+      disablePictureInPicture
+      controlslist="nofullscreen nodownload noremoteplayback"></video>
+    <div class="lb-controls" id="lbControls">
+      <button class="lb-play-btn" id="lbPlayBtn">&#9654;</button>
+      <div class="lb-progress" id="lbProgress"><div class="lb-bar" id="lbBar"></div></div>
+      <span class="lb-time" id="lbTime">0:00</span>
+    </div>
+  </div>
+  <div class="lb-footer">
+    <span class="lb-title" id="lbTitle">VIDEO 1</span>
+    <button class="lb-close" id="lbCloseBtn">[ CLOSE ]</button>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  const canvas = document.getElementById('particlesCanvas');
+  const ctx = canvas.getContext('2d');
+  const mainCard = document.getElementById('mainCard');
+
+  let W, H, particles;
+  let mouseX = -1000;
+  let mouseY = -1000;
+
+  const N = 85;
+  const SPEED = 0.32;
+  const CDIST = 125;
+  const CDIST_SQ = CDIST * CDIST;
+  const MDIST = 180;
+  const MDIST_SQ = MDIST * MDIST;
+
+  let tRX = 0, tRY = 0, cRX = 0, cRY = 0;
+  let lbTRX = 0, lbTRY = 0, lbCRX = 0, lbCRY = 0;
+
+  const bgAudio = new Audio('bgmusic.mp3');
+  bgAudio.loop = true;
+  bgAudio.preload = 'auto';
+  bgAudio.load();
+
+  function tryPlay() {
+    bgAudio.play().catch(() => {});
+  }
+
+  tryPlay();
+  document.addEventListener('click', tryPlay, { once: true });
+  document.addEventListener('keydown', tryPlay, { once: true });
+  document.addEventListener('touchend', tryPlay, { once: true });
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkP() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * SPEED * 2,
+      vy: (Math.random() - 0.5) * SPEED * 2,
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: N }, mkP);
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+
+    cRX += (tRX - cRX) * 0.1;
+    cRY += (tRY - cRY) * 0.1;
+
+    if (window.innerWidth > 520 && !lbOpen) {
+      mainCard.style.transform = `rotateX(${cRX}deg) rotateY(${cRY}deg)`;
+    }
+
+    // Lightbox tilt — very slow lerp for ultra-smooth feel
+    if (lbOpen) {
+      lbCRX += (lbTRX - lbCRX) * 0.04;
+      lbCRY += (lbTRY - lbCRY) * 0.04;
+      lbCard.style.transform = `perspective(1400px) rotateX(${lbCRX}deg) rotateY(${lbCRY}deg)`;
+    }
+
+    for (let i = 0; i < N; i++) {
+      const p = particles[i];
+
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      const dmx = p.x - mouseX;
+      const dmy = p.y - mouseY;
+      const dmSq = dmx * dmx + dmy * dmy;
+
+      if (dmSq < MDIST_SQ) {
+        const dm = Math.sqrt(dmSq);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouseX, mouseY);
+        ctx.strokeStyle = `rgba(138,28,28,${(1 - dm / MDIST) * 0.4})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        const f = (MDIST - dm) / MDIST;
+        p.x += (dmx / dm) * f * 1.5;
+        p.y += (dmy / dm) * f * 1.5;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(138,28,28,0.55)';
+      ctx.fill();
+
+      for (let j = i + 1; j < N; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const dSq = dx * dx + dy * dy;
+        if (dSq < CDIST_SQ) {
+          const d = Math.sqrt(dSq);
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(138,28,28,${(1 - d / CDIST) * 0.25})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (window.innerWidth > 520) {
+      tRX = (window.innerHeight / 2 - e.clientY) / 180;
+      tRY = (e.clientX - window.innerWidth / 2) / 180;
+    }
+  });
+
+  window.addEventListener('mouseout', () => {
+    mouseX = -1000;
+    mouseY = -1000;
+    tRX = 0;
+    tRY = 0;
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  });
+
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  let videosLoaded = false;
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabContents.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'work' && !videosLoaded) {
+        videosLoaded = true;
+        loadVideos();
+      }
+    });
+  });
+
+  async function loadVideos() {
+    const grid = document.getElementById('workGrid');
+    const empty = document.getElementById('workEmpty');
+    const found = [];
+    let i = 1;
+    while (i <= 30) {
+      try {
+        const res = await fetch('Video' + i + '.mp4', { method: 'HEAD' });
+        if (res.ok) { found.push(i); i++; } else break;
+      } catch { break; }
+    }
+    if (found.length === 0) { empty.style.display = 'block'; return; }
+    found.forEach(n => grid.appendChild(buildThumbCard(n)));
+  }
+
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    return m + ':' + Math.floor(s % 60).toString().padStart(2, '0');
+  }
+
+  function buildThumbCard(n) {
+    const card = document.createElement('div');
+    card.className = 'thumb-card';
+
+    const vid = document.createElement('video');
+    vid.src = 'Video' + n + '.mp4';
+    vid.preload = 'metadata';
+    vid.muted = true;
+    vid.playsInline = true;
+    vid.addEventListener('loadedmetadata', () => { vid.currentTime = 0.1; });
+    vid.addEventListener('contextmenu', e => e.preventDefault());
+
+    const hover = document.createElement('div');
+    hover.className = 'thumb-hover';
+    hover.innerHTML = `<div class="thumb-play">&#9654;</div><div class="thumb-label">VIDEO ${n}</div>`;
+
+    card.appendChild(vid);
+    card.appendChild(hover);
+    card.addEventListener('click', () => openLightbox(n, card));
+    return card;
+  }
+
+  // ── LIGHTBOX ──
+  const lbBackdrop  = document.getElementById('lbBackdrop');
+  const lbCard      = document.getElementById('lbCard');
+  const lbVideoArea = document.getElementById('lbVideoArea');
+  const lbVideo     = document.getElementById('lbVideo');
+  const lbPlayBtn   = document.getElementById('lbPlayBtn');
+  const lbProgress  = document.getElementById('lbProgress');
+  const lbBar       = document.getElementById('lbBar');
+  const lbTime      = document.getElementById('lbTime');
+  const lbTitle     = document.getElementById('lbTitle');
+  const lbCloseBtn  = document.getElementById('lbCloseBtn');
+
+  let currentThumb = null;
+  let lbOpen = false;
+  const PAD = 36; // px margin from screen edges
+
+  function openLightbox(n, thumbEl) {
+    if (lbOpen) return;
+    lbOpen = true;
+    currentThumb = thumbEl;
+
+    // Reset state
+    lbBar.style.width = '0%';
+    lbTime.textContent = '0:00';
+    lbPlayBtn.innerHTML = '&#9654;';
+    lbTitle.textContent = 'VIDEO ' + n;
+    lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
+
+    // Set video src and start buffering immediately
+    lbVideo.preload = 'auto';
+    lbVideo.src = 'Video' + n + '.mp4';
+    lbVideo.load();
+
+    // Snapshot thumb position
+    const tr = thumbEl.getBoundingClientRect();
+
+    // Place lb-card at thumb position instantly (no transition)
+    lbCard.style.transition = 'none';
+    lbCard.style.transform  = '';
+    lbCard.style.left   = tr.left   + 'px';
+    lbCard.style.top    = tr.top    + 'px';
+    lbCard.style.width  = tr.width  + 'px';
+    lbCard.style.height = tr.height + 'px';
+    lbCard.style.borderRadius = '8px';
+    lbCard.classList.add('visible');
+    lbBackdrop.classList.add('active');
+
+    // Animate to expanded on next paint
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+      lbCard.style.transition = `left 0.44s ${EASE}, top 0.44s ${EASE}, width 0.44s ${EASE}, height 0.44s ${EASE}, border-radius 0.3s ease`;
+      lbCard.style.left   = PAD + 'px';
+      lbCard.style.top    = PAD + 'px';
+      lbCard.style.width  = (window.innerWidth  - PAD * 2) + 'px';
+      lbCard.style.height = (window.innerHeight - PAD * 2) + 'px';
+      lbCard.style.borderRadius = '16px';
+    }));
+
+    // Play only once the browser says it has enough data — no guessing, no sync issues
+    lbVideo.addEventListener('canplay', function onReady() {
+      lbVideo.removeEventListener('canplay', onReady);
+      if (lbOpen) lbVideo.play().catch(() => {});
+    }, { once: true });
+  }
+
+  function closeLightbox() {
+    if (!lbOpen || !currentThumb) return;
+    lbOpen = false;
+    lbVideo.pause();
+
+    // Reset lb tilt immediately
+    lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
+    lbCard.style.transform = '';
+
+    const tr = currentThumb.getBoundingClientRect();
+    const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    lbCard.style.transition = `left 0.38s ${EASE}, top 0.38s ${EASE}, width 0.38s ${EASE}, height 0.38s ${EASE}, border-radius 0.25s ease`;
+    lbCard.style.left   = tr.left   + 'px';
+    lbCard.style.top    = tr.top    + 'px';
+    lbCard.style.width  = tr.width  + 'px';
+    lbCard.style.height = tr.height + 'px';
+    lbCard.style.borderRadius = '8px';
+
+    lbBackdrop.classList.remove('active');
+
+    setTimeout(() => {
+      lbCard.classList.remove('visible');
+      lbCard.style.transition = 'none';
+      lbVideo.src = '';
+      currentThumb = null;
+    }, 400);
+  }
+
+  // Lightbox tilt — sets targets only; RAF loop lerps toward them
+  // Normalized by card half-size so edges never spike, clamped to ±2deg
+  lbCard.addEventListener('mousemove', (e) => {
+    if (!lbOpen) return;
+    const r = lbCard.getBoundingClientRect();
+    const nx = (r.top + r.height / 2 - e.clientY) / (r.height / 2);
+    const ny = (e.clientX - r.left - r.width / 2) / (r.width  / 2);
+    lbTRX = Math.max(-2, Math.min(2, nx * 2));
+    lbTRY = Math.max(-2, Math.min(2, ny * 2));
+  });
+
+  lbCard.addEventListener('mouseleave', () => {
+    lbTRX = 0;
+    lbTRY = 0;
+  });
+
+  // Lightbox video controls
+  function lbTogglePlay() {
+    if (lbVideo.paused) {
+      lbVideo.play().catch(() => {});
+      lbPlayBtn.innerHTML = '&#9646;&#9646;';
+    } else {
+      lbVideo.pause();
+      lbPlayBtn.innerHTML = '&#9654;';
+    }
+  }
+
+  lbPlayBtn.addEventListener('click', e => { e.stopPropagation(); lbTogglePlay(); });
+  lbVideoArea.addEventListener('click', e => { if (e.target === lbVideo || e.target === lbVideoArea) lbTogglePlay(); });
+
+  lbVideo.addEventListener('timeupdate', () => {
+    if (lbVideo.duration) {
+      lbBar.style.width = (lbVideo.currentTime / lbVideo.duration * 100) + '%';
+      lbTime.textContent = fmtTime(lbVideo.currentTime) + ' / ' + fmtTime(lbVideo.duration);
+    }
+  });
+
+  lbVideo.addEventListener('loadedmetadata', () => {
+    if (lbVideo.duration) lbTime.textContent = '0:00 / ' + fmtTime(lbVideo.duration);
+  });
+
+  lbVideo.addEventListener('ended', () => {
+    lbPlayBtn.innerHTML = '&#9654;';
+    lbBar.style.width = '0%';
+    lbVideo.currentTime = 0;
+  });
+
+  lbVideo.addEventListener('play',  () => { lbPlayBtn.innerHTML = '&#9646;&#9646;'; });
+  lbVideo.addEventListener('pause', () => { lbPlayBtn.innerHTML = '&#9654;'; });
+  lbVideo.addEventListener('contextmenu', e => e.preventDefault());
+
+  lbProgress.addEventListener('click', e => {
+    e.stopPropagation();
+    const rect = lbProgress.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (lbVideo.duration) lbVideo.currentTime = pct * lbVideo.duration;
+  });
+
+  lbCloseBtn.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+  lbBackdrop.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && lbOpen) closeLightbox(); });
+
+  init();
+  loop();
+
+})();
+</script>
+</body>
+</html>
