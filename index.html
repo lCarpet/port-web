@@ -534,6 +534,74 @@ body {
 
 .lb-video-area video {
   width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+/* ── VIDEO LOADING OVERLAY ── */
+.lb-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 2, 2, 0.82);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.lb-loading-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Spinning ring */
+.lb-spinner {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid rgba(138,28,28,0.25);
+  border-top-color: rgba(220,80,80,0.9);
+  border-right-color: rgba(180,50,50,0.6);
+  animation: lbSpin 0.9s cubic-bezier(0.4, 0.1, 0.6, 0.9) infinite;
+}
+
+@keyframes lbSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Pulsing inner dot */
+.lb-spinner-inner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(220,80,80,0.85);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: lbPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes lbPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.5; }
+  50%       { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+.lb-loading-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  color: rgba(255,180,180,0.7);
+  animation: lbLabelBlink 1.1s ease-in-out infinite;
+}
+
+@keyframes lbLabelBlink {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
 }
 
 .lb-controls {
@@ -788,9 +856,19 @@ body {
 <div class="lb-backdrop" id="lbBackdrop"></div>
 <div class="lb-card" id="lbCard">
   <div class="lb-video-area" id="lbVideoArea">
-    <video id="lbVideo" preload="auto" playsinline loop muted
-  disablePictureInPicture
-  controlslist="nofullscreen nodownload noremoteplayback"></video>
+    <video id="lbVideo" preload="auto" playsinline loop
+      disablePictureInPicture
+      controlslist="nofullscreen nodownload noremoteplayback"></video>
+
+    <!-- Loading overlay — shown while video is buffering -->
+    <div class="lb-loading-overlay" id="lbLoadingOverlay">
+      <div style="position:relative;width:52px;height:52px;">
+        <div class="lb-spinner"></div>
+        <div class="lb-spinner-inner"></div>
+      </div>
+      <div class="lb-loading-label" id="lbLoadingLabel">LOADING</div>
+    </div>
+
     <button class="lb-nav lb-nav-prev" id="lbPrev">&#8592;</button>
     <button class="lb-nav lb-nav-next" id="lbNext">&#8594;</button>
     <div class="lb-controls">
@@ -1019,21 +1097,20 @@ body {
   }
 
   // ── LIGHTBOX ──
-  const lbBackdrop  = document.getElementById('lbBackdrop');
-  const lbCard      = document.getElementById('lbCard');
-  const lbVideoArea = document.getElementById('lbVideoArea');
-  const lbVideo     = document.getElementById('lbVideo');
-  const lbPlayBtn   = document.getElementById('lbPlayBtn');
-  const lbProgress  = document.getElementById('lbProgress');
-  const lbBar       = document.getElementById('lbBar');
-  const lbTime      = document.getElementById('lbTime');
-  const lbTitle     = document.getElementById('lbTitle');
-  const lbCloseBtn  = document.getElementById('lbCloseBtn');
-  const lbPrev      = document.getElementById('lbPrev');
-  const lbNext      = document.getElementById('lbNext');
-
-  lbVideo.muted = true;
-lbVideo.volume = 0;
+  const lbBackdrop      = document.getElementById('lbBackdrop');
+  const lbCard          = document.getElementById('lbCard');
+  const lbVideoArea     = document.getElementById('lbVideoArea');
+  const lbVideo         = document.getElementById('lbVideo');
+  const lbPlayBtn       = document.getElementById('lbPlayBtn');
+  const lbProgress      = document.getElementById('lbProgress');
+  const lbBar           = document.getElementById('lbBar');
+  const lbTime          = document.getElementById('lbTime');
+  const lbTitle         = document.getElementById('lbTitle');
+  const lbCloseBtn      = document.getElementById('lbCloseBtn');
+  const lbPrev          = document.getElementById('lbPrev');
+  const lbNext          = document.getElementById('lbNext');
+  const lbLoadingOverlay = document.getElementById('lbLoadingOverlay');
+  const lbLoadingLabel  = document.getElementById('lbLoadingLabel');
 
   const videoList  = [];
   let currentIndex = 0;
@@ -1041,17 +1118,36 @@ lbVideo.volume = 0;
   let lbOpen = false;
   const PAD  = 36;
 
+  // Loading label cycling
+  const loadingMessages = ['LOADING', 'BUFFERING', 'ALMOST', 'HANG TIGHT'];
+  let loadingLabelIndex = 0;
+  let loadingLabelTimer = null;
+
+  function startLoadingOverlay() {
+    lbVideo.style.opacity = '0';
+    lbLoadingOverlay.classList.add('visible');
+    loadingLabelIndex = 0;
+    lbLoadingLabel.textContent = loadingMessages[0];
+    clearInterval(loadingLabelTimer);
+    loadingLabelTimer = setInterval(() => {
+      loadingLabelIndex = (loadingLabelIndex + 1) % loadingMessages.length;
+      lbLoadingLabel.textContent = loadingMessages[loadingLabelIndex];
+    }, 700);
+  }
+
+  function stopLoadingOverlay() {
+    clearInterval(loadingLabelTimer);
+    lbLoadingOverlay.classList.remove('visible');
+    lbVideo.style.opacity = '1';
+  }
+
   function updateNavArrows() {
     lbPrev.classList.toggle('hidden', currentIndex === 0);
     lbNext.classList.toggle('hidden', currentIndex === videoList.length - 1);
   }
 
-  function navigateTo(index) {
-    if (index < 0 || index >= videoList.length) return;
-    currentIndex = index;
-
-    const n = videoList[currentIndex];
-    currentThumb = document.querySelectorAll('.thumb-card')[currentIndex] || currentThumb;
+  function loadVideoIntoLightbox(n) {
+    startLoadingOverlay();
 
     lbVideo.pause();
     lbBar.style.width   = '0%';
@@ -1064,9 +1160,16 @@ lbVideo.volume = 0;
 
     lbVideo.addEventListener('canplay', function onReady() {
       lbVideo.removeEventListener('canplay', onReady);
+      stopLoadingOverlay();
       if (lbOpen) lbVideo.play().catch(() => {});
     }, { once: true });
+  }
 
+  function navigateTo(index) {
+    if (index < 0 || index >= videoList.length) return;
+    currentIndex = index;
+    currentThumb = document.querySelectorAll('.thumb-card')[currentIndex] || currentThumb;
+    loadVideoIntoLightbox(videoList[currentIndex]);
     updateNavArrows();
   }
 
@@ -1079,12 +1182,16 @@ lbVideo.volume = 0;
     lbBar.style.width  = '0%';
     lbTime.textContent = '0:00';
     lbPlayBtn.innerHTML = '&#9654;';
-    lbTitle.textContent = 'VIDEO ' + n + '  ·  ' + (currentIndex + 1) + ' / ' + videoList.length;
     lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
+
+    // Show loading overlay immediately
+    startLoadingOverlay();
 
     lbVideo.preload = 'auto';
     lbVideo.src = 'Video' + n + '.mp4';
     lbVideo.load();
+
+    lbTitle.textContent = 'VIDEO ' + n + '  ·  ' + (currentIndex + 1) + ' / ' + videoList.length;
 
     const tr = thumbEl.getBoundingClientRect();
 
@@ -1110,6 +1217,7 @@ lbVideo.volume = 0;
 
     lbVideo.addEventListener('canplay', function onReady() {
       lbVideo.removeEventListener('canplay', onReady);
+      stopLoadingOverlay();
       if (lbOpen) lbVideo.play().catch(() => {});
     }, { once: true });
 
@@ -1120,6 +1228,11 @@ lbVideo.volume = 0;
     if (!lbOpen || !currentThumb) return;
     lbOpen = false;
     lbVideo.pause();
+
+    // Clear loading state
+    clearInterval(loadingLabelTimer);
+    lbLoadingOverlay.classList.remove('visible');
+    lbVideo.style.opacity = '0';
 
     lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
     lbCard.style.transform = '';
@@ -1139,6 +1252,7 @@ lbVideo.volume = 0;
       lbCard.classList.remove('visible');
       lbCard.style.transition = 'none';
       lbVideo.src = '';
+      lbVideo.style.opacity = '1';
       currentThumb = null;
     }, 400);
   }
@@ -1179,7 +1293,9 @@ lbVideo.volume = 0;
     if (lbVideo.duration) lbTime.textContent = '0:00 / ' + fmtTime(lbVideo.duration);
   });
 
-
+  // Also show spinner if video stalls mid-playback
+  lbVideo.addEventListener('waiting', () => { if (lbOpen) startLoadingOverlay(); });
+  lbVideo.addEventListener('playing', () => { stopLoadingOverlay(); });
 
   lbVideo.addEventListener('play',  () => { lbPlayBtn.innerHTML = '&#9646;&#9646;'; });
   lbVideo.addEventListener('pause', () => { lbPlayBtn.innerHTML = '&#9654;'; });
