@@ -1122,6 +1122,7 @@ body {
   const loadingMessages = ['LOADING', 'BUFFERING', 'ALMOST', 'HANG TIGHT'];
   let loadingLabelIndex = 0;
   let loadingLabelTimer = null;
+  let hasPlayed = false;
 
   function startLoadingOverlay() {
     lbVideo.style.opacity = '0';
@@ -1148,6 +1149,7 @@ body {
 
   function loadVideoIntoLightbox(n) {
     startLoadingOverlay();
+    hasPlayed = false;
 
     lbVideo.pause();
     lbBar.style.width   = '0%';
@@ -1186,6 +1188,7 @@ body {
 
     // Show loading overlay immediately
     startLoadingOverlay();
+    hasPlayed = false;
 
     lbVideo.preload = 'auto';
     lbVideo.src = 'Video' + n + '.mp4';
@@ -1293,8 +1296,13 @@ body {
     if (lbVideo.duration) lbTime.textContent = '0:00 / ' + fmtTime(lbVideo.duration);
   });
 
-  lbVideo.addEventListener('play',  () => { lbPlayBtn.innerHTML = '&#9646;&#9646;'; });
+  lbVideo.addEventListener('play',  () => {
+    lbPlayBtn.innerHTML = '&#9646;&#9646;';
+    hasPlayed = true;
+  });
   lbVideo.addEventListener('pause', () => { lbPlayBtn.innerHTML = '&#9654;'; });
+  lbVideo.addEventListener('waiting', () => { if (lbOpen && hasPlayed) startLoadingOverlay(); });
+  lbVideo.addEventListener('playing', () => { if (hasPlayed) stopLoadingOverlay(); });
   lbVideo.addEventListener('contextmenu', e => e.preventDefault());
 
   lbProgress.addEventListener('click', e => {
