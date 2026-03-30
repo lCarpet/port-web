@@ -10,30 +10,22 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --accent:  #8a1c1c;
-  --accent2: #b52828;
-  --panel:   rgba(255,222,222,0.84);
-  --panel2:  rgba(252,205,205,0.78);
-  --border:  rgba(138,28,28,0.2);
-  --text:    #000000;
-  --textdim: #8a3a3a;
-  --white:   #ffffff;
+  --accent:   #8a1c1c;
+  --accent2:  #b52828;
+  --panel:    rgba(255,222,222,0.84);
+  --panel2:   rgba(252,205,205,0.78);
+  --border:   rgba(138,28,28,0.2);
+  --text:     #000000;
+  --textdim:  #8a3a3a;
+  --white:    #ffffff;
 }
 
 html { scroll-behavior: smooth; }
 
-* {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
+* { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 
-.selectable,
-.selectable * {
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  user-select: text;
-  cursor: text;
+.selectable, .selectable * {
+  -webkit-user-select: text; -moz-user-select: text; user-select: text; cursor: text;
 }
 
 body {
@@ -61,6 +53,7 @@ body {
   perspective: 1000px;
 }
 
+/* ── MARQUEE ── */
 .top-stripe {
   background: var(--accent);
   color: rgba(255,210,210,0.9);
@@ -68,7 +61,6 @@ body {
   font-size: 1.05rem;
   letter-spacing: 0.14em;
   padding: 5px 0;
-  text-align: center;
   overflow: hidden;
   white-space: nowrap;
   position: sticky;
@@ -86,6 +78,7 @@ body {
   100% { transform: translateX(-100%); }
 }
 
+/* ── OUTER CARD ── */
 .outer {
   background: rgba(252,214,214,0.5);
   backdrop-filter: blur(3px);
@@ -98,6 +91,7 @@ body {
   will-change: transform;
 }
 
+/* ── TABS ── */
 .tab-bar {
   display: flex;
   background: rgba(100,20,20,0.95);
@@ -118,163 +112,98 @@ body {
   margin-bottom: -2px;
 }
 
-.tab-btn:hover {
-  color: rgba(240,248,255,0.85);
-}
+.tab-btn:hover { color: rgba(240,248,255,0.85); }
+.tab-btn.active { color: var(--white); border-bottom: 3px solid var(--white); }
 
-.tab-btn.active {
-  color: var(--white);
-  border-bottom: 3px solid var(--white);
-}
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeUp 0.35s ease; }
 
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-  animation: fadeUp 0.35s ease;
-}
-
-.header-block {
+/* ── HERO ── */
+.hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 2px solid var(--accent);
-}
-
-.header-left {
+  grid-template-columns: auto 1fr;
   background: var(--accent);
-  padding: 14px 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-}
-
-.site-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.3rem;
-  color: var(--white);
-  line-height: 1;
-  letter-spacing: 0.04em;
-}
-
-.site-sub {
-  font-size: 1.1rem;
-  color: rgba(250,185,185,0.85);
-  letter-spacing: 0.07em;
-}
-
-.header-right {
-  background: var(--panel);
-  border-left: 2px solid var(--accent);
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-}
-
-.header-right .htitle {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-  color: var(--accent);
-  letter-spacing: 0.08em;
-}
-
-.header-right p {
-  font-size: 1.1rem;
-  color: var(--text);
-  line-height: 1.6;
-}
-
-.header-right strong { color: var(--accent); }
-
-.profile-row {
-  background: var(--panel2);
-  border-bottom: 2px solid var(--border);
-  padding: 16px 18px;
-  display: flex;
-  align-items: center;
+  padding: 20px 20px 20px 20px;
   gap: 18px;
+  align-items: center;
+  border-bottom: 2px solid rgba(255,255,255,0.12);
 }
 
 .pfp-wrap {
   position: relative;
-  width: 86px;
-  height: 86px;
+  width: 90px;
+  height: 90px;
   flex-shrink: 0;
   transition: transform 0.3s ease;
 }
 
-.pfp-wrap:hover {
-  transform: scale(1.05) rotate(-3deg);
-}
+.pfp-wrap:hover { transform: scale(1.05) rotate(-3deg); }
 
 .pfp-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 50%;
   display: block;
-  mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
+  mask-image: none;
+  -webkit-mask-image: none;
   pointer-events: none;
   -webkit-user-drag: none;
 }
 
 .pfp-ring {
   position: absolute;
-  inset: -2px;
-  border-radius: 12px;
-  border: 2px solid rgba(138,28,28,0.45);
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
   pointer-events: none;
 }
 
+.hero-info { display: flex; flex-direction: column; gap: 6px; }
+
 .pname {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.4rem;
-  color: var(--accent);
+  font-size: 2.6rem;
+  color: var(--white);
   line-height: 1;
-  text-shadow: 2px 2px 0 rgba(138,28,28,0.18), 3px 3px 0 rgba(138,28,28,0.1);
+  letter-spacing: 0.04em;
 }
 
-.pmeta { font-size: 1.12rem; color: var(--textdim); margin-top: 3px; line-height: 1.45; }
-.pmeta span { color: var(--accent); }
-.badge-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,200,200,0.75);
+  letter-spacing: 0.07em;
+}
+
+.badge-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
 
 .badge {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   padding: 1px 9px;
-  border: 1.5px solid rgba(138,28,28,0.35);
+  border: 1.5px solid rgba(255,255,255,0.25);
   border-radius: 3px;
-  color: var(--accent2);
-  background: rgba(181,40,40,0.07);
+  color: rgba(255,220,220,0.9);
+  background: rgba(255,255,255,0.08);
   letter-spacing: 0.05em;
   transition: all 0.2s ease;
 }
 
-.badge:hover {
-  background: var(--accent);
-  color: var(--white);
-  transform: translateY(-2px);
-}
+.badge:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
 
-.lazy-note {
+/* ── NOTE STRIP ── */
+.note-strip {
   background: rgba(138,28,28,0.06);
-  border-top: 1.5px solid var(--border);
   border-bottom: 1.5px solid var(--border);
-  padding: 10px 18px;
-  font-size: 1.1rem;
+  padding: 9px 18px;
+  font-size: 1.05rem;
   color: var(--textdim);
   font-style: italic;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  line-height: 1.5;
 }
 
-.lazy-tag {
+.note-tag {
   font-family: 'Bebas Neue', sans-serif;
   font-style: normal;
   font-size: 0.82rem;
@@ -284,23 +213,27 @@ body {
   padding: 1px 8px;
   border-radius: 3px;
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
-.divline { height: 2px; background: linear-gradient(90deg, var(--accent), rgba(138,28,28,0.08)); }
-
-.two-col {
+/* ── THREE-COL INFO ── */
+.three-col {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   border-bottom: 2px solid var(--border);
 }
 
-.col-l { background: var(--panel);  padding: 18px 18px 22px; }
-.col-r { background: var(--panel2); padding: 18px 18px 22px; border-left: 2px solid var(--border); }
+.info-cell {
+  padding: 16px 16px 20px;
+  border-right: 1.5px solid var(--border);
+}
+
+.info-cell:last-child { border-right: none; }
+.info-cell:nth-child(odd) { background: var(--panel); }
+.info-cell:nth-child(even) { background: var(--panel2); }
 
 .sec-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--accent);
   letter-spacing: 0.06em;
   border-bottom: 1.5px solid var(--border);
@@ -310,108 +243,131 @@ body {
   text-underline-offset: 4px;
 }
 
-.rtxt { font-size: 1.14rem; color: var(--text); line-height: 1.72; }
-.rtxt p { margin-bottom: 1px; transition: transform 0.2s ease; }
-.rtxt p:hover { transform: translateX(5px); color: var(--accent); }
+.rtxt { font-size: 1.05rem; color: var(--text); line-height: 1.65; }
+.rtxt p { margin-bottom: 2px; transition: transform 0.18s ease; }
+.rtxt p:hover { transform: translateX(4px); color: var(--accent); }
 .rtxt strong { color: var(--accent); }
 
-.warn-box {
-  background: rgba(138,28,28,0.07);
-  border-left: 3px solid var(--accent);
-  padding: 9px 13px;
-  font-size: 1.08rem;
-  color: var(--text);
-  line-height: 1.6;
-  margin-top: 10px;
-}
-
-.warn-box strong { color: var(--accent); }
-
-.robux-banner {
-  background: var(--accent);
-  color: var(--white);
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.35rem;
-  letter-spacing: 0.12em;
-  text-align: center;
-  padding: 10px 12px;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  transition: letter-spacing 0.3s ease;
-}
-
-.robux-banner:hover {
-  letter-spacing: 0.18em;
-}
-
-.pay-grid {
+/* ── COMMISSION BLOCK ── */
+.comm-block {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-bottom: 2px solid var(--border);
 }
 
-.pay-l { background: var(--panel);  padding: 18px 18px 22px; }
-.pay-r { background: var(--panel2); padding: 18px 18px 22px; border-left: 2px solid var(--border); }
+.comm-l {
+  background: var(--panel);
+  padding: 18px 18px 22px;
+}
+
+.comm-r {
+  background: var(--accent);
+  padding: 18px 18px 22px;
+  border-left: 2px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.comm-r .sec-title { color: rgba(255,200,200,0.85); border-color: rgba(255,255,255,0.15); }
+
+.pay-method {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  color: rgba(255,230,230,0.9);
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.18s ease;
+}
+
+.pay-method:last-child { border-bottom: none; }
+.pay-method:hover { transform: translateX(4px); }
+
+.pay-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,200,200,0.6);
+  flex-shrink: 0;
+}
 
 .notice-pill {
   display: inline-block;
   background: var(--accent);
   color: var(--white);
-  font-size: 0.95rem;
-  padding: 2px 12px;
+  font-size: 0.9rem;
+  padding: 2px 10px;
   border-radius: 3px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   letter-spacing: 0.06em;
 }
 
-.pricelist { font-size: 1.13rem; color: var(--text); line-height: 1.7; }
+.pricelist { font-size: 1.05rem; color: var(--text); line-height: 1.65; }
 
-.pricelist .cat {
+.cat {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--accent2);
   letter-spacing: 0.07em;
-  margin-top: 7px;
-  margin-bottom: 1px;
+  margin-top: 8px;
+  margin-bottom: 2px;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.prow {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.prow:hover {
-  background: rgba(138,28,28,0.08);
-  transform: scale(1.02);
-}
-
-.prow .pn { color: var(--text); }
-.prow .pa { color: var(--accent); white-space: nowrap; font-weight: bold; }
-
-.bnote {
-  background: rgba(138,28,28,0.06);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 10px 14px;
-  font-size: 1.05rem;
-  color: var(--textdim);
-  line-height: 1.6;
-  margin-top: 12px;
-}
-
-.bnote strong { color: var(--accent); }
-
-.full-panel {
-  background: var(--panel);
-  padding: 16px 20px 18px;
+/* ── DISCORD FOOTER ── */
+.discord-bar {
+  background: var(--panel2);
   border-bottom: 2px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
+.discord-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.discord-handle {
+  font-size: 1.15rem;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discord-handle span {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.copy-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 3px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover { background: var(--accent2); transform: scale(1.04); }
+.copy-btn.copied { background: #2d7a2d; }
+
+/* ── FOOTER STRIPE ── */
 .footer-stripe {
   background: var(--accent);
   color: rgba(250,185,185,0.75);
@@ -421,7 +377,52 @@ body {
   padding: 7px 0;
 }
 
-/* ── WORK GRID (thumbnail gallery) ── */
+/* ── WORK LOADING ── */
+.work-loading {
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.loading-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+  40%           { transform: scale(1);   opacity: 1; }
+}
+
+.loading-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  color: var(--textdim);
+  animation: textBlink 1.4s ease-in-out infinite;
+}
+
+@keyframes textBlink {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* ── WORK GRID ── */
 .work-grid {
   padding: 14px;
   display: grid;
@@ -446,7 +447,6 @@ body {
   grid-column: 1 / -1;
 }
 
-/* thumbnail card */
 .thumb-card {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -465,11 +465,8 @@ body {
 }
 
 .thumb-card video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; pointer-events: none;
 }
 
 .thumb-hover {
@@ -480,7 +477,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  background: rgba(8, 24, 50, 0.52);
+  background: rgba(8,24,50,0.52);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -488,13 +485,10 @@ body {
 .thumb-card:hover .thumb-hover { opacity: 1; }
 
 .thumb-play {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   background: rgba(240,248,255,0.92);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   color: var(--accent);
   font-size: 0.85rem;
   padding-left: 3px;
@@ -509,152 +503,126 @@ body {
 
 /* ── LIGHTBOX ── */
 .lb-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(5, 15, 30, 0.88);
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
+  position: fixed; inset: 0;
+  background: rgba(5,15,30,0.88);
+  z-index: 999; opacity: 0; pointer-events: none;
   transition: opacity 0.38s ease;
   backdrop-filter: blur(4px);
 }
 
-.lb-backdrop.active {
-  opacity: 1;
-  pointer-events: all;
-}
+.lb-backdrop.active { opacity: 1; pointer-events: all; }
 
 .lb-card {
-  position: fixed;
-  z-index: 1000;
+  position: fixed; z-index: 1000;
   background: #2e0a0a;
   border: 1.5px solid rgba(138,28,28,0.5);
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 8px; overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-  opacity: 0;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
+  opacity: 0; pointer-events: none;
+  display: flex; flex-direction: column;
   will-change: transform, top, left, width, height;
 }
 
-.lb-card.visible {
-  opacity: 1;
-  pointer-events: all;
-}
+.lb-card.visible { opacity: 1; pointer-events: all; }
 
 .lb-video-area {
-  position: relative;
-  flex: 1;
-  min-height: 0;
+  position: relative; flex: 1; min-height: 0;
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
 
 .lb-video-area video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  pointer-events: none;
+  width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
 }
 
-/* lightbox custom controls */
 .lb-controls {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
+  position: absolute; bottom: 0; left: 0; right: 0;
   padding: 28px 14px 10px;
   background: linear-gradient(transparent, rgba(30,4,4,0.8));
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 5;
-  opacity: 0;
-  transition: opacity 0.25s ease;
+  display: flex; align-items: center; gap: 10px;
+  z-index: 5; opacity: 0; transition: opacity 0.25s ease;
 }
 
 .lb-video-area:hover .lb-controls { opacity: 1; }
 
 .lb-play-btn {
-  background: none;
-  border: none;
+  background: none; border: none;
   color: rgba(240,248,255,0.9);
-  font-size: 1.15rem;
-  cursor: pointer;
-  padding: 2px 6px;
-  font-family: 'VT323', monospace;
-  line-height: 1;
-  flex-shrink: 0;
+  font-size: 1.15rem; cursor: pointer;
+  padding: 2px 6px; font-family: 'VT323', monospace;
+  line-height: 1; flex-shrink: 0;
 }
 
 .lb-progress {
-  flex: 1;
-  height: 4px;
+  flex: 1; height: 4px;
   background: rgba(255,255,255,0.22);
-  border-radius: 2px;
-  cursor: pointer;
+  border-radius: 2px; cursor: pointer;
 }
 
 .lb-bar {
-  height: 100%;
-  width: 0%;
+  height: 100%; width: 0%;
   background: rgba(240,248,255,0.9);
-  border-radius: 2px;
-  pointer-events: none;
+  border-radius: 2px; pointer-events: none;
 }
 
 .lb-time {
-  font-family: 'VT323', monospace;
-  font-size: 1rem;
-  color: rgba(240,248,255,0.75);
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-family: 'VT323', monospace; font-size: 1rem;
+  color: rgba(240,248,255,0.75); white-space: nowrap; flex-shrink: 0;
 }
 
-/* lightbox footer bar */
 .lb-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 6px 14px;
   background: rgba(12,28,55,0.95);
-  border-top: 1px solid rgba(138,28,28,0.3);
-  flex-shrink: 0;
+  border-top: 1px solid rgba(138,28,28,0.3); flex-shrink: 0;
 }
 
 .lb-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  color: var(--accent2);
+  font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+  letter-spacing: 0.1em; color: var(--accent2);
 }
 
 .lb-close {
-  background: none;
-  border: none;
-  color: rgba(200,225,255,0.6);
-  font-size: 1.05rem;
-  font-family: 'VT323', monospace;
-  cursor: pointer;
-  letter-spacing: 0.08em;
-  padding: 2px 6px;
-  border-radius: 3px;
+  background: none; border: none;
+  color: rgba(200,225,255,0.6); font-size: 1.05rem;
+  font-family: 'VT323', monospace; cursor: pointer;
+  letter-spacing: 0.08em; padding: 2px 6px; border-radius: 3px;
   transition: color 0.2s, background 0.2s;
 }
 
-.lb-close:hover {
-  color: rgba(240,248,255,1);
-  background: rgba(138,28,28,0.3);
+.lb-close:hover { color: rgba(240,248,255,1); background: rgba(138,28,28,0.3); }
+
+.lb-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(30,4,4,0.55);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(240,248,255,0.85);
+  font-family: 'VT323', monospace;
+  font-size: 1.8rem;
+  line-height: 1;
+  width: 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
 }
 
-@media (max-width: 520px) {
-  .work-grid { grid-template-columns: repeat(2, 1fr); }
-}
+.lb-video-area:hover .lb-nav { opacity: 1; }
+.lb-nav:hover { background: rgba(138,28,28,0.7); }
+.lb-nav.hidden { pointer-events: none; opacity: 0 !important; }
 
+.lb-nav-prev { left: 10px; }
+.lb-nav-next { right: 10px; }
+
+/* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -666,13 +634,16 @@ body {
 .d3 { animation-delay: 0.18s; }
 .d4 { animation-delay: 0.26s; }
 .d5 { animation-delay: 0.34s; }
-.d6 { animation-delay: 0.42s; }
 
+/* ── RESPONSIVE ── */
 @media (max-width: 520px) {
-  .header-block, .two-col, .pay-grid { grid-template-columns: 1fr; }
-  .col-r, .pay-r { border-left: none; border-top: 2px solid var(--border); }
-  .header-right { border-left: none; border-top: 2px solid rgba(255,255,255,0.2); }
+  .three-col, .comm-block { grid-template-columns: 1fr; }
+  .info-cell { border-right: none; border-bottom: 1.5px solid var(--border); }
+  .comm-r { border-left: none; border-top: 2px solid rgba(255,255,255,0.1); }
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
   .outer { transform: none !important; }
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .badge-row { justify-content: center; }
 }
 </style>
 </head>
@@ -684,43 +655,30 @@ body {
 
   <div class="top-stripe fade d1">
     <span class="marquee-text">
-      CARPET COMMS ✦ CRYPTO / PAYPAL / ROBUX ✦ SCRIPTING ✦ 4 YRS EXP ✦ OPEN FOR ORDERS ✦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      CARPET COMMS ✦ CRYPTO / PAYPAL / ROBUX ✦ SCRIPTING ✦ 4 YRS EXP ✦ OPEN FOR ORDERS ✦
+      CARPET ✦ ROBLOX SCRIPTING ✦ CRYPTO / PAYPAL / ROBUX ✦ 4 YRS EXP ✦ OPEN FOR COMMS ✦ DM @lcarpet ON DISCORD ✦&nbsp;&nbsp;&nbsp;&nbsp;
+      CARPET ✦ ROBLOX SCRIPTING ✦ CRYPTO / PAYPAL / ROBUX ✦ 4 YRS EXP ✦ OPEN FOR COMMS ✦ DM @lcarpet ON DISCORD ✦
     </span>
   </div>
 
   <div class="outer" id="mainCard">
 
     <div class="tab-bar">
-      <button class="tab-btn active" data-tab="comms">COMMISSIONS</button>
+      <button class="tab-btn active" data-tab="comms">MAIN</button>
       <button class="tab-btn" data-tab="work">WORK</button>
     </div>
 
+    <!-- COMMISSIONS TAB -->
     <div class="tab-content active" id="tab-comms">
 
-      <div class="header-block fade d2">
-        <div class="header-left">
-          <div class="site-title">CARPET</div>
-          <div class="site-sub">// ROBLOX DEV COMMISSIONS</div>
-          <div class="site-sub" style="font-size:0.95rem;opacity:0.65;margin-top:3px;">COMMS OPEN · DM ON DISCORD</div>
-        </div>
-        <div class="header-right">
-          <div class="htitle">ABOUT ME</div>
-          <p>
-            hey, i'm <strong>Carpet</strong>, a <strong>scripter</strong> with
-            <strong>4 years</strong> of roblox dev experience. I'm open to work on projects and commissions.
-          </p>
-        </div>
-      </div>
-
-      <div class="profile-row fade d2">
+      <!-- HERO -->
+      <div class="hero fade d2">
         <div class="pfp-wrap">
           <div class="pfp-ring"></div>
           <img src="pic.png" alt="Carpet">
         </div>
-        <div>
-          <div class="pname selectable">CARPET_</div>
-          <div class="pmeta"><span>· roblox scripter · <span>4 yrs exp</span></div>
+        <div class="hero-info">
+          <div class="pname selectable">CARPET</div>
+          <div class="hero-sub">// ROBLOX SCRIPTER · 4 YRS EXP · COMMS OPEN</div>
           <div class="badge-row">
             <span class="badge">SCRIPTING</span>
             <span class="badge">CRYPTO</span>
@@ -731,78 +689,94 @@ body {
         </div>
       </div>
 
-      <div class="lazy-note fade d3">
-        <span class="lazy-tag">NOTE</span>
-        only accept serious and organised clients.
+      <!-- NOTE -->
+      <div class="note-strip fade d2">
+        <span class="note-tag">NOTE</span>
+        Only accept serious and organised clients. Contact via Discord only.
       </div>
 
-      <div class="divline fade d3"></div>
-
-      <div class="two-col fade d3">
-        <div class="col-l">
-          <div class="sec-title">RULES &amp; Guidelines</div>
+      <!-- THREE COLUMNS: RULES · DEADLINES · ABOUT -->
+      <div class="three-col fade d3">
+        <div class="info-cell">
+          <div class="sec-title">RULES</div>
           <div class="rtxt">
-            <p>+ Pay upfront 50% is important.</p>
+            <p>+ Upfront payment of 50% is mandatory.</p>
             <p>+ Be clear about your request upfront.</p>
-            <p>+ Contact me via DM on Discord, not other social applications.</p>
             <p>+ Don't rush. Good work takes time.</p>
-            <p>+ Getting hired for a game will cost at least 1K USD + % but we can discuss this.</p>
-            <p>+ I do not have a specific scope of mechanics I focus on, I can do pretty much everything.</p>
+            <p>+ Assets must be provided.</p>
           </div>
         </div>
-        <div class="col-r">
+        <div class="info-cell">
           <div class="sec-title">DEADLINES</div>
           <div class="rtxt">
-            <p>I'll give an honest estimate before we start.</p>
+            <p>I give an honest estimate before starting.</p>
             <br>
-            <p>If a deadline isn't met on my end, <strong>you're allowed to get your money back.</strong></p>
+            <p>If I miss a deadline, <strong>you get your money back.</strong></p>
+          </div>
+        </div>
+        <div class="info-cell">
+          <div class="sec-title">ABOUT</div>
+          <div class="rtxt">
+            <p>Scripter with <strong>4 years</strong> of Roblox dev experience.</p>
+            <br>
+            <p>Open to commissions and long-term projects.</p>
           </div>
         </div>
       </div>
 
-      <div class="robux-banner fade d4">
-        PAYMENTS: CRYPTO, PAYPAL, ROBUX · 50% UPFRONT
-      </div>
-
-     <div class="pay-grid fade d4">
-        <div class="pay-l">
+      <!-- COMMISSION + PAYMENT -->
+      <div class="comm-block fade d4">
+        <div class="comm-l">
           <div class="sec-title">COMMISSIONS</div>
           <div class="notice-pill">SCRIPTING</div>
           <div class="pricelist">
             <div class="cat">PRICING:</div>
-            <div style="font-size:1rem;color:var(--textdim);line-height:1.55;">
-              I cannot specify pricing as it depends on the scope. Contact me for a quote.
-            </div>
+            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">
+              Commissions start at <strong style="color:var(--accent);">$150</strong> and go up depending on scope. Contact me for a quote.
+            </p>
+            <div class="cat" style="margin-top:14px;">PROJECT HIRE:</div>
+            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">
+              Starting at <strong style="color:var(--accent);">$1,000 + 5%</strong> of the project. Open to discussion.
+            </p>
           </div>
         </div>
-
-        <div class="pay-r">
+        <div class="comm-r">
           <div class="sec-title">PAYMENT</div>
-          <div class="pricelist">
-            <div class="cat">METHODS:</div>
-            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">Crypto, PayPal, or Robux.</p>
-            <div class="cat" style="margin-top:12px;">TERMS:</div>
-            <p style="font-size:1rem;color:var(--textdim);line-height:1.55;">50% upfront required before work begins.</p>
+          <div>
+            <div class="pay-method"><div class="pay-dot"></div> Cryptocurrency</div>
+            <div class="pay-method"><div class="pay-dot"></div> PayPal</div>
+            <div class="pay-method"><div class="pay-dot"></div> Robux</div>
           </div>
+          <p style="font-size:0.95rem;color:rgba(255,200,200,0.65);margin-top:4px;line-height:1.5;">
+            50% required upfront before any work begins.
+          </p>
         </div>
       </div>
 
-      <div class="full-panel fade d5">
-        <div class="sec-title" style="font-size:1.15rem;">ADDITIONAL NOTES</div>
-        <div class="rtxt" style="font-size:1.1rem;">
-          <p>* Accepted payment methods: Crypto, PayPal, Robux.</p>
-          <p style="margin-top:5px;">* 50% payment upfront is required.</p>
-          <p style="margin-top:5px;">* DM me on Discord to start a commission.</p>
+      <!-- DISCORD -->
+      <div class="discord-bar fade d4">
+        <div>
+          <div class="discord-label">CONTACT</div>
+          <div class="discord-handle">Discord: <span>@lcarpet</span></div>
         </div>
+        <button class="copy-btn" id="copyBtn">COPY TAG</button>
       </div>
 
-      <div class="footer-stripe fade d6">
-        CARPET <span style="font-size: 1.5em;">✦</span> CRYPTO / PAYPAL / ROBUX <span style="font-size: 1.5em;">✦</span> 4 YRS EXP <span style="font-size: 1.5em;">✦</span> SCRIPTING
+      <!-- FOOTER -->
+      <div class="footer-stripe fade d5">
+        CARPET <span style="font-size:1.4em;">✦</span> @lcarpet <span style="font-size:1.4em;">✦</span> CRYPTO / PAYPAL / ROBUX <span style="font-size:1.4em;">✦</span> 4 YRS EXP
       </div>
 
     </div>
 
+    <!-- WORK TAB -->
     <div class="tab-content" id="tab-work">
+      <div class="work-loading" id="workLoading">
+        <div class="loading-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="loading-text" id="loadingText">LOADING WORK</div>
+      </div>
       <div class="work-grid" id="workGrid"></div>
       <div class="work-empty" id="workEmpty">no videos found yet. check back later!</div>
     </div>
@@ -814,10 +788,12 @@ body {
 <div class="lb-backdrop" id="lbBackdrop"></div>
 <div class="lb-card" id="lbCard">
   <div class="lb-video-area" id="lbVideoArea">
-    <video id="lbVideo" preload="auto" playsinline
+    <video id="lbVideo" preload="auto" playsinline loop
       disablePictureInPicture
       controlslist="nofullscreen nodownload noremoteplayback"></video>
-    <div class="lb-controls" id="lbControls">
+    <button class="lb-nav lb-nav-prev" id="lbPrev">&#8592;</button>
+    <button class="lb-nav lb-nav-next" id="lbNext">&#8594;</button>
+    <div class="lb-controls">
       <button class="lb-play-btn" id="lbPlayBtn">&#9654;</button>
       <div class="lb-progress" id="lbProgress"><div class="lb-bar" id="lbBar"></div></div>
       <span class="lb-time" id="lbTime">0:00</span>
@@ -832,19 +808,18 @@ body {
 <script>
 (function () {
 
-  const canvas = document.getElementById('particlesCanvas');
-  const ctx = canvas.getContext('2d');
+  const canvas  = document.getElementById('particlesCanvas');
+  const ctx     = canvas.getContext('2d');
   const mainCard = document.getElementById('mainCard');
 
   let W, H, particles;
-  let mouseX = -1000;
-  let mouseY = -1000;
+  let mouseX = -1000, mouseY = -1000;
 
-  const N = 85;
-  const SPEED = 0.32;
-  const CDIST = 125;
+  const N        = 85;
+  const SPEED    = 0.32;
+  const CDIST    = 125;
   const CDIST_SQ = CDIST * CDIST;
-  const MDIST = 180;
+  const MDIST    = 180;
   const MDIST_SQ = MDIST * MDIST;
 
   let tRX = 0, tRY = 0, cRX = 0, cRY = 0;
@@ -852,22 +827,18 @@ body {
 
   const bgAudio = new Audio('bgmusic.mp3');
   bgAudio.loop = true;
+  bgAudio.volume = 0.05;
   bgAudio.preload = 'auto';
   bgAudio.load();
 
-  function tryPlay() {
-    bgAudio.play().catch(() => {});
-  }
+  function tryPlay() { bgAudio.play().catch(() => {}); }
 
   tryPlay();
-  document.addEventListener('click', tryPlay, { once: true });
-  document.addEventListener('keydown', tryPlay, { once: true });
+  document.addEventListener('click',    tryPlay, { once: true });
+  document.addEventListener('keydown',  tryPlay, { once: true });
   document.addEventListener('touchend', tryPlay, { once: true });
 
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
   function mkP() {
     return {
@@ -878,10 +849,7 @@ body {
     };
   }
 
-  function init() {
-    resize();
-    particles = Array.from({ length: N }, mkP);
-  }
+  function init() { resize(); particles = Array.from({ length: N }, mkP); }
 
   function loop() {
     ctx.clearRect(0, 0, W, H);
@@ -893,7 +861,6 @@ body {
       mainCard.style.transform = `rotateX(${cRX}deg) rotateY(${cRY}deg)`;
     }
 
-    // Lightbox tilt — very slow lerp for ultra-smooth feel
     if (lbOpen) {
       lbCRX += (lbTRX - lbCRX) * 0.04;
       lbCRY += (lbTRY - lbCRY) * 0.04;
@@ -908,8 +875,8 @@ body {
       p.x += p.vx;
       p.y += p.vy;
 
-      const dmx = p.x - mouseX;
-      const dmy = p.y - mouseY;
+      const dmx  = p.x - mouseX;
+      const dmy  = p.y - mouseY;
       const dmSq = dmx * dmx + dmy * dmy;
 
       if (dmSq < MDIST_SQ) {
@@ -931,7 +898,7 @@ body {
       ctx.fill();
 
       for (let j = i + 1; j < N; j++) {
-        const q = particles[j];
+        const q  = particles[j];
         const dx = p.x - q.x;
         const dy = p.y - q.y;
         const dSq = dx * dx + dy * dy;
@@ -962,19 +929,26 @@ body {
   });
 
   window.addEventListener('mouseout', () => {
-    mouseX = -1000;
-    mouseY = -1000;
-    tRX = 0;
-    tRY = 0;
+    mouseX = -1000; mouseY = -1000; tRX = 0; tRY = 0;
   });
 
   document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   });
 
-  const tabBtns = document.querySelectorAll('.tab-btn');
+  // ── COPY DISCORD TAG ──
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    navigator.clipboard.writeText('@lcarpet').then(() => {
+      this.textContent = 'COPIED!';
+      this.classList.add('copied');
+      setTimeout(() => { this.textContent = 'COPY TAG'; this.classList.remove('copied'); }, 2000);
+    }).catch(() => {});
+  });
+
+  // ── TABS ──
+  const tabBtns     = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
-  let videosLoaded = false;
+  let videosLoaded  = false;
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -990,18 +964,31 @@ body {
   });
 
   async function loadVideos() {
-    const grid = document.getElementById('workGrid');
-    const empty = document.getElementById('workEmpty');
-    const found = [];
+    const grid    = document.getElementById('workGrid');
+    const empty   = document.getElementById('workEmpty');
+    const loading = document.getElementById('workLoading');
+    const loadingText = document.getElementById('loadingText');
+
+    const messages = ['LOADING WORK', 'FETCHING VIDEOS', 'ALMOST THERE', 'HANG TIGHT'];
+    let msgIndex = 0;
+    const msgInterval = setInterval(() => {
+      msgIndex = (msgIndex + 1) % messages.length;
+      loadingText.textContent = messages[msgIndex];
+    }, 800);
+
     let i = 1;
     while (i <= 30) {
       try {
         const res = await fetch('Video' + i + '.mp4', { method: 'HEAD' });
-        if (res.ok) { found.push(i); i++; } else break;
+        if (res.ok) { videoList.push(i); i++; } else break;
       } catch { break; }
     }
-    if (found.length === 0) { empty.style.display = 'block'; return; }
-    found.forEach(n => grid.appendChild(buildThumbCard(n)));
+
+    clearInterval(msgInterval);
+    loading.style.display = 'none';
+
+    if (videoList.length === 0) { empty.style.display = 'block'; return; }
+    videoList.forEach(n => grid.appendChild(buildThumbCard(n)));
   }
 
   function fmtTime(s) {
@@ -1042,32 +1029,62 @@ body {
   const lbTime      = document.getElementById('lbTime');
   const lbTitle     = document.getElementById('lbTitle');
   const lbCloseBtn  = document.getElementById('lbCloseBtn');
+  const lbPrev      = document.getElementById('lbPrev');
+  const lbNext      = document.getElementById('lbNext');
 
+  const videoList  = [];
+  let currentIndex = 0;
   let currentThumb = null;
   let lbOpen = false;
-  const PAD = 36; // px margin from screen edges
+  const PAD  = 36;
+
+  function updateNavArrows() {
+    lbPrev.classList.toggle('hidden', currentIndex === 0);
+    lbNext.classList.toggle('hidden', currentIndex === videoList.length - 1);
+  }
+
+  function navigateTo(index) {
+    if (index < 0 || index >= videoList.length) return;
+    currentIndex = index;
+
+    const n = videoList[currentIndex];
+    currentThumb = document.querySelectorAll('.thumb-card')[currentIndex] || currentThumb;
+
+    lbVideo.pause();
+    lbBar.style.width   = '0%';
+    lbTime.textContent  = '0:00';
+    lbPlayBtn.innerHTML = '&#9654;';
+    lbTitle.textContent = 'VIDEO ' + n + '  \u00b7  ' + (currentIndex + 1) + ' / ' + videoList.length;
+
+    lbVideo.src = 'Video' + n + '.mp4';
+    lbVideo.load();
+
+    lbVideo.addEventListener('canplay', function onReady() {
+      lbVideo.removeEventListener('canplay', onReady);
+      if (lbOpen) lbVideo.play().catch(() => {});
+    }, { once: true });
+
+    updateNavArrows();
+  }
 
   function openLightbox(n, thumbEl) {
     if (lbOpen) return;
     lbOpen = true;
-    currentThumb = thumbEl;
+    currentThumb  = thumbEl;
+    currentIndex  = videoList.indexOf(n);
 
-    // Reset state
-    lbBar.style.width = '0%';
+    lbBar.style.width  = '0%';
     lbTime.textContent = '0:00';
     lbPlayBtn.innerHTML = '&#9654;';
-    lbTitle.textContent = 'VIDEO ' + n;
+    lbTitle.textContent = 'VIDEO ' + n + '  ·  ' + (currentIndex + 1) + ' / ' + videoList.length;
     lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
 
-    // Set video src and start buffering immediately
     lbVideo.preload = 'auto';
     lbVideo.src = 'Video' + n + '.mp4';
     lbVideo.load();
 
-    // Snapshot thumb position
     const tr = thumbEl.getBoundingClientRect();
 
-    // Place lb-card at thumb position instantly (no transition)
     lbCard.style.transition = 'none';
     lbCard.style.transform  = '';
     lbCard.style.left   = tr.left   + 'px';
@@ -1078,7 +1095,6 @@ body {
     lbCard.classList.add('visible');
     lbBackdrop.classList.add('active');
 
-    // Animate to expanded on next paint
     requestAnimationFrame(() => requestAnimationFrame(() => {
       const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
       lbCard.style.transition = `left 0.44s ${EASE}, top 0.44s ${EASE}, width 0.44s ${EASE}, height 0.44s ${EASE}, border-radius 0.3s ease`;
@@ -1089,11 +1105,12 @@ body {
       lbCard.style.borderRadius = '16px';
     }));
 
-    // Play only once the browser says it has enough data — no guessing, no sync issues
     lbVideo.addEventListener('canplay', function onReady() {
       lbVideo.removeEventListener('canplay', onReady);
       if (lbOpen) lbVideo.play().catch(() => {});
     }, { once: true });
+
+    updateNavArrows();
   }
 
   function closeLightbox() {
@@ -1101,11 +1118,10 @@ body {
     lbOpen = false;
     lbVideo.pause();
 
-    // Reset lb tilt immediately
     lbTRX = 0; lbTRY = 0; lbCRX = 0; lbCRY = 0;
     lbCard.style.transform = '';
 
-    const tr = currentThumb.getBoundingClientRect();
+    const tr   = currentThumb.getBoundingClientRect();
     const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
     lbCard.style.transition = `left 0.38s ${EASE}, top 0.38s ${EASE}, width 0.38s ${EASE}, height 0.38s ${EASE}, border-radius 0.25s ease`;
     lbCard.style.left   = tr.left   + 'px';
@@ -1124,23 +1140,17 @@ body {
     }, 400);
   }
 
-  // Lightbox tilt — sets targets only; RAF loop lerps toward them
-  // Normalized by card half-size so edges never spike, clamped to ±2deg
   lbCard.addEventListener('mousemove', (e) => {
     if (!lbOpen) return;
-    const r = lbCard.getBoundingClientRect();
+    const r  = lbCard.getBoundingClientRect();
     const nx = (r.top + r.height / 2 - e.clientY) / (r.height / 2);
-    const ny = (e.clientX - r.left - r.width / 2) / (r.width  / 2);
+    const ny = (e.clientX - r.left - r.width / 2) / (r.width / 2);
     lbTRX = Math.max(-2, Math.min(2, nx * 2));
     lbTRY = Math.max(-2, Math.min(2, ny * 2));
   });
 
-  lbCard.addEventListener('mouseleave', () => {
-    lbTRX = 0;
-    lbTRY = 0;
-  });
+  lbCard.addEventListener('mouseleave', () => { lbTRX = 0; lbTRY = 0; });
 
-  // Lightbox video controls
   function lbTogglePlay() {
     if (lbVideo.paused) {
       lbVideo.play().catch(() => {});
@@ -1152,24 +1162,21 @@ body {
   }
 
   lbPlayBtn.addEventListener('click', e => { e.stopPropagation(); lbTogglePlay(); });
-  lbVideoArea.addEventListener('click', e => { if (e.target === lbVideo || e.target === lbVideoArea) lbTogglePlay(); });
+  lbVideoArea.addEventListener('click', e => {
+    if (e.target === lbVideo || e.target === lbVideoArea) lbTogglePlay();
+  });
 
   lbVideo.addEventListener('timeupdate', () => {
-    if (lbVideo.duration) {
-      lbBar.style.width = (lbVideo.currentTime / lbVideo.duration * 100) + '%';
-      lbTime.textContent = fmtTime(lbVideo.currentTime) + ' / ' + fmtTime(lbVideo.duration);
-    }
+    if (!lbVideo.duration) return;
+    lbBar.style.width   = (lbVideo.currentTime / lbVideo.duration * 100) + '%';
+    lbTime.textContent  = fmtTime(lbVideo.currentTime) + ' / ' + fmtTime(lbVideo.duration);
   });
 
   lbVideo.addEventListener('loadedmetadata', () => {
     if (lbVideo.duration) lbTime.textContent = '0:00 / ' + fmtTime(lbVideo.duration);
   });
 
-  lbVideo.addEventListener('ended', () => {
-    lbPlayBtn.innerHTML = '&#9654;';
-    lbBar.style.width = '0%';
-    lbVideo.currentTime = 0;
-  });
+
 
   lbVideo.addEventListener('play',  () => { lbPlayBtn.innerHTML = '&#9646;&#9646;'; });
   lbVideo.addEventListener('pause', () => { lbPlayBtn.innerHTML = '&#9654;'; });
@@ -1178,13 +1185,21 @@ body {
   lbProgress.addEventListener('click', e => {
     e.stopPropagation();
     const rect = lbProgress.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     if (lbVideo.duration) lbVideo.currentTime = pct * lbVideo.duration;
   });
 
-  lbCloseBtn.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
-  lbBackdrop.addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && lbOpen) closeLightbox(); });
+  lbPrev.addEventListener('click', e => { e.stopPropagation(); navigateTo(currentIndex - 1); });
+  lbNext.addEventListener('click', e => { e.stopPropagation(); navigateTo(currentIndex + 1); });
+
+  lbCloseBtn.addEventListener('click',  e => { e.stopPropagation(); closeLightbox(); });
+  lbBackdrop.addEventListener('click',  closeLightbox);
+  document.addEventListener('keydown',  e => {
+    if (!lbOpen) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   navigateTo(currentIndex - 1);
+    if (e.key === 'ArrowRight')  navigateTo(currentIndex + 1);
+  });
 
   init();
   loop();
