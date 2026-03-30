@@ -889,6 +889,7 @@ body {
   const canvas  = document.getElementById('particlesCanvas');
   const ctx     = canvas.getContext('2d');
   const mainCard = document.getElementById('mainCard');
+  const lbCard  = document.getElementById('lbCard');
 
   let W, H, particles;
   let mouseX = -1000, mouseY = -1000;
@@ -902,6 +903,7 @@ body {
 
   let tRX = 0, tRY = 0, cRX = 0, cRY = 0;
   let lbTRX = 0, lbTRY = 0, lbCRX = 0, lbCRY = 0;
+  let lbOpen = false;
 
   const bgAudio = new Audio('bgmusic.mp3');
   bgAudio.loop = true;
@@ -1098,7 +1100,6 @@ body {
 
   // ── LIGHTBOX ──
   const lbBackdrop      = document.getElementById('lbBackdrop');
-  const lbCard          = document.getElementById('lbCard');
   const lbVideoArea     = document.getElementById('lbVideoArea');
   const lbVideo         = document.getElementById('lbVideo');
   const lbPlayBtn       = document.getElementById('lbPlayBtn');
@@ -1115,7 +1116,6 @@ body {
   const videoList  = [];
   let currentIndex = 0;
   let currentThumb = null;
-  let lbOpen = false;
   const PAD  = 36;
 
   // Loading label cycling
@@ -1292,10 +1292,6 @@ body {
   lbVideo.addEventListener('loadedmetadata', () => {
     if (lbVideo.duration) lbTime.textContent = '0:00 / ' + fmtTime(lbVideo.duration);
   });
-
-  // Also show spinner if video stalls mid-playback
-  lbVideo.addEventListener('waiting', () => { if (lbOpen) startLoadingOverlay(); });
-  lbVideo.addEventListener('playing', () => { stopLoadingOverlay(); });
 
   lbVideo.addEventListener('play',  () => { lbPlayBtn.innerHTML = '&#9646;&#9646;'; });
   lbVideo.addEventListener('pause', () => { lbPlayBtn.innerHTML = '&#9654;'; });
